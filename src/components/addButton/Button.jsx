@@ -1,9 +1,10 @@
 import React from "react";
 import s from './Button.module.css';
 
-function Button() {
+function Button({ notes, setNote, initObj }) {
+
     return <div>
-        <button className={s.buttonStyle}>Add New Note</button>
+        <button className={s.buttonStyle} onClick={() => setNote([...notes, initObj])}>Add New Note</button>
     </div>;
 }
 
