@@ -1,36 +1,44 @@
-import './App.css';
-import { nanoid } from 'nanoid';
-import React, { useState } from 'react';
-import Header from './components/header/Header';
-import Notes from './components/notes/Notes';
-import Button from './components/addButton/Button';
-import Footer from './components/footer/Footer';
-
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchPosts, selectAllPosts, selectPostById } from './redux/postsSlice';
 
 function App() {
-  const [notes, setNote] = useState([]);
+  const dispatch = useDispatch()
+  const posts = useSelector(selectAllPosts)
+
+  const [value, setValue] = useState(1)
+  const currentUser = useSelector(state => selectPostById(state, value))
+
+  const result = posts.map(post => {
+    return <Post
+      post={post}
+      key={post.id}
+    />
+  })
+
+  useEffect(() => {
+    dispatch(fetchPosts())
+  }, [dispatch])
 
   return (
     <div className='mainPage'>
-      <Header></Header>
-
-      <div>
-        <Notes notes={notes} setNote={setNote}></Notes>
-
-        <Button notes={notes} setNote={setNote} initObj={createInitObj()}></Button>
-      </div>
-
-      <Footer></Footer>
+      <button onClick={() => setValue(value => value += 1)}>
+        Get user by id:{value}
+      </button>
+      {currentUser.title}
+      {result}
     </div>
   );
 }
 
-function createInitObj() {
-  return {
-    id: nanoid(),
-    text: 'hi',
-    isEdit: false,
-  };
+const Post = ({ post }) => {
+  return (
+    <div>
+      <div>{post.id}</div>
+      <div>{post.title}</div>
+      <br></br>
+    </div>
+  )
 }
 
 export default App;
