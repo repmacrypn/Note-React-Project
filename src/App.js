@@ -4,9 +4,9 @@ import { useLazyGetPostQuery, useGetPostsQuery } from './redux/apiSlice';
 function App() {
   const [value, setValue] = useState(1)
 
-  const handleGetPostClick = () => {
-    getPost(value)
+  const handleGetPostClick = async () => {
     setValue(value => value += 1)
+    await getPost(value)
   }
 
   const {
@@ -16,6 +16,7 @@ function App() {
 
   const [getPost,
     { data: post,
+      isFetching,
     }] = useLazyGetPostQuery()
 
   const result = posts.map(post => {
@@ -24,8 +25,11 @@ function App() {
       key={post.id}
     />
   })
+  console.log('qqepte')
 
   if (isLoading) return <div>Loading...</div>
+  if (isFetching) return <div>Fethcing...</div>
+
 
   console.log('qq')
 
