@@ -1,13 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchPosts, selectAllPosts, selectPostById } from './redux/postsSlice';
+import React, { useState } from 'react'
+import { useLazyGetPostQuery, useGetPostsQuery } from './redux/apiSlice';
 
 function App() {
-  const dispatch = useDispatch()
-  const posts = useSelector(selectAllPosts)
-
   const [value, setValue] = useState(1)
-  const currentUser = useSelector(state => selectPostById(state, value))
+
+  const handleGetPostClick = () => {
+    getPost(value)
+    setValue(value => value += 1)
+  }
+
+  const {
+    data: posts = [],
+    isLoading,
+  } = useGetPostsQuery()
+
+  const [getPost,
+    { data: post,
+    }] = useLazyGetPostQuery()
 
   const result = posts.map(post => {
     return <Post
@@ -16,16 +25,16 @@ function App() {
     />
   })
 
-  useEffect(() => {
-    dispatch(fetchPosts())
-  }, [dispatch])
+  if (isLoading) return <div>Loading...</div>
+
+  console.log('qq')
 
   return (
     <div className='mainPage'>
-      <button onClick={() => setValue(value => value += 1)}>
+      <button onClick={handleGetPostClick}>
         Get user by id:{value}
       </button>
-      {currentUser.title}
+      {post?.title}
       {result}
     </div>
   );
