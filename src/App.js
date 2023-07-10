@@ -25,13 +25,9 @@ function App() {
       key={post.id}
     />
   })
-  console.log('qqepte')
 
   if (isLoading) return <div>Loading...</div>
   if (isFetching) return <div>Fethcing...</div>
-
-
-  console.log('qq')
 
   return (
     <div className='mainPage'>
