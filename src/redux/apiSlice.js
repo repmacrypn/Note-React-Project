@@ -5,12 +5,21 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/' }),
     endpoints: (builder) => ({
         getPosts: builder.query({
-            query: () => 'posts'
+            query: () => 'posts',
+            providesTags: [{ type: 'Posts', id: 'LIST' }],
         }),
         getPost: builder.query({
             query: (id) => `posts/${id}`,
-        })
+        }),
+        addNewPost: builder.mutation({
+            query: (body) => ({
+                url: `posts`,
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+        }),
     }),
 })
 
-export const { useGetPostsQuery, useLazyGetPostQuery } = apiSlice
+export const { useGetPostsQuery, useLazyGetPostQuery, useAddNewPostMutation } = apiSlice
